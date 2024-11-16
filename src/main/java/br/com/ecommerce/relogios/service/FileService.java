@@ -9,4 +9,6 @@ public interface FileService {
     File save(Long id, String nameImage, InputStream image) throws IOException;
 
     InputStream download(Long id, String nomeImagem) throws IOException;
+
+    void delete(String url);
 }

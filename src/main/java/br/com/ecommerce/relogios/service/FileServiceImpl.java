@@ -11,24 +11,23 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public InputStream download(Long id, String nomeImagem) throws IOException {
-        // Construir o caminho com o diretório do id
-        File file = new File(BASE_DIRECTORY + id + "/" + nomeImagem);
+    public InputStream download(Long id, String name) throws IOException {
+        File file = new File(BASE_DIRECTORY + id + "/" + name);
         if (!file.exists()) {
-            throw new IOException("Imagem não encontrada: " + nomeImagem);
+            throw new IOException("Imagem não encontrada: " + name);
         }
         return new FileInputStream(file);
     }
 
     @Override
-    public File save(Long id, String nomeImagem, InputStream imagem) throws IOException {
+    public File save(Long id, String name, InputStream imagem) throws IOException {
         File directory = new File(BASE_DIRECTORY + id);
         if (!directory.exists()) {
             boolean created = directory.mkdirs();
             System.out.println("Diretório criado: " + created);
         }
 
-        File file = new File(directory, nomeImagem);
+        File file = new File(directory, name);
         System.out.println("Salvando arquivo em: " + file.getAbsolutePath());
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(imagem.readAllBytes());
@@ -40,4 +39,15 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public void delete(String url) {
+        File file = new File(url);
+        if (file.delete()) {
+            System.out.println("Deleted the folder: " + file.getName());
+        } else {
+            System.out.println("Failed to delete the folder.");
+        }
+    }
 }
+
+

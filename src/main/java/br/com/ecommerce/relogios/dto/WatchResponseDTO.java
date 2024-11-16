@@ -1,7 +1,9 @@
 package br.com.ecommerce.relogios.dto;
 
+import br.com.ecommerce.relogios.model.Storage;
 import br.com.ecommerce.relogios.model.Watch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record WatchResponseDTO(
@@ -16,9 +18,10 @@ public record WatchResponseDTO(
         String format,
         String mechanism,
         String imagePerfil,
-        List<String> imageUrls) {
+        List<Storage> storageList
+    ) {
     public static WatchResponseDTO valueOf(Watch watch) {
-        List<String> imagens = watch.getImageUrls().stream().toList();
+        List<Storage> storageList = watch.getStorages().stream().toList();
         return new WatchResponseDTO(
                 watch.getId(),
                 watch.getName(),
@@ -31,6 +34,6 @@ public record WatchResponseDTO(
                 watch.getFormat(),
                 watch.getMechanism(),
                 watch.getImagePerfil(),
-                imagens);
+                storageList);
     }
 }

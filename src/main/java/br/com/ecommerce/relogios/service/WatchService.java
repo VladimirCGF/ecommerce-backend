@@ -18,9 +18,9 @@ public interface WatchService {
 
     public void delete(Long id);
 
-    List<String> getImageUrlsById(Long id);
+//    List<String> getImageUrlsById(Long id);
 
     public WatchResponseDTO saveImagePerfil(Long id, String nameImage);
 
-    void saveImageNamesFromDirectory(Long id) throws IOException;
+//    void saveImageNamesFromDirectory(Long id) throws IOException;
 }

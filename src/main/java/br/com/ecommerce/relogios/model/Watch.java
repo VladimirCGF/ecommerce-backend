@@ -1,6 +1,9 @@
 package br.com.ecommerce.relogios.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +24,8 @@ public class Watch extends DefaultEntity {
 
     private String imagePerfil;
 
-    @ElementCollection
-    @CollectionTable(name = "watch_images")
-    @Column(name = "image_url") //
-    private List<String> imageUrls = new ArrayList<>();
+    @OneToMany(mappedBy = "watch", cascade = CascadeType.ALL)
+    private List<Storage> storages;
 
     @OneToMany(mappedBy = "watch", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
@@ -109,12 +110,12 @@ public class Watch extends DefaultEntity {
         this.imagePerfil = imagePerfil;
     }
 
-    public List<String> getImageUrls() {
-        return imageUrls;
+    public List<Storage> getStorages() {
+        return storages;
     }
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setStorages(List<Storage> storages) {
+        this.storages = storages;
     }
 
     public List<OrderItem> getOrderItems() {

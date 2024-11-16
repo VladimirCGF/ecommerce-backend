@@ -160,37 +160,37 @@ public class WatchResource {
         }
     }
 
-    @GET
-    @Path("/images/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getImagesByWatchId(@PathParam("id") Long id) {
-        Watch watch = watchRepository.findById(id);
-        if (watch == null) {
-            throw new NotFoundException("Watch não encontrado com o ID: " + id);
-        }
-
-        List<String> imageUrls = watch.getImageUrls();
-        if (imageUrls == null || imageUrls.isEmpty()) {
-            return Response.status(Response.Status.NO_CONTENT)
-                    .entity("Nenhuma imagem encontrada para este relógio")
-                    .build();
-        }
-
-        return Response.ok(imageUrls).build();
-    }
-
-    @PUT
-    @Path("atualizarImageUrl/{id}")
-    public Response saveImageNamesFromDirectory(@PathParam("id") Long id) throws IOException {
-        watchService.saveImageNamesFromDirectory(id);
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
-
-    @GET
-    @Path("/imageUrlsById/{id}")
-    public Response getImageUrlsById(@PathParam("id") Long id) {
-        List<String> imageUrls = watchService.getImageUrlsById(id);
-        return Response.ok(imageUrls).build();
-    }
+//    @GET
+//    @Path("/images/{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getImagesByWatchId(@PathParam("id") Long id) {
+//        Watch watch = watchRepository.findById(id);
+//        if (watch == null) {
+//            throw new NotFoundException("Watch não encontrado com o ID: " + id);
+//        }
+//
+//        List<String> imageUrls = watch.getImageUrls();
+//        if (imageUrls == null || imageUrls.isEmpty()) {
+//            return Response.status(Response.Status.NO_CONTENT)
+//                    .entity("Nenhuma imagem encontrada para este relógio")
+//                    .build();
+//        }
+//
+//        return Response.ok(imageUrls).build();
+//    }
+//
+//    @PUT
+//    @Path("atualizarImageUrl/{id}")
+//    public Response saveImageNamesFromDirectory(@PathParam("id") Long id) throws IOException {
+//        watchService.saveImageNamesFromDirectory(id);
+//        return Response.status(Response.Status.NO_CONTENT).build();
+//    }
+//
+//    @GET
+//    @Path("/imageUrlsById/{id}")
+//    public Response getImageUrlsById(@PathParam("id") Long id) {
+//        List<String> imageUrls = watchService.getImageUrlsById(id);
+//        return Response.ok(imageUrls).build();
+//    }
 
 }

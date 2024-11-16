@@ -2,6 +2,7 @@ package br.com.ecommerce.relogios.service;
 
 import br.com.ecommerce.relogios.dto.WatchDTO;
 import br.com.ecommerce.relogios.dto.WatchResponseDTO;
+import br.com.ecommerce.relogios.model.Storage;
 import br.com.ecommerce.relogios.model.Watch;
 import br.com.ecommerce.relogios.repository.WatchRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -60,7 +61,7 @@ public class WatchServiceImpl implements WatchService {
         watch.setBrand(watchDTO.brand());
         watch.setFormat(watchDTO.format());
         watch.setMechanism(watchDTO.mechanism());
-        watch.setImageUrls(new ArrayList<>());
+        Storage storage = new Storage();
         watchRepository.persist(watch);
         return WatchResponseDTO.valueOf(watch);
     }
@@ -93,17 +94,17 @@ public class WatchServiceImpl implements WatchService {
         watchRepository.deleteById(id);
     }
 
-    @Transactional
-    @Override
-    public List<String> getImageUrlsById(Long id) {
-        List<String> imageUrls = new ArrayList<>();
-        Watch watch = watchRepository.findById(id);
-        if (watch == null) {
-            throw new NotFoundException("id watch not found");
-        }
-        imageUrls = watch.getImageUrls().stream().toList();
-        return imageUrls;
-    }
+//    @Transactional
+//    @Override
+//    public List<String> getImageUrlsById(Long id) {
+//        List<String> imageUrls = new ArrayList<>();
+//        Watch watch = watchRepository.findById(id);
+//        if (watch == null) {
+//            throw new NotFoundException("id watch not found");
+//        }
+//        imageUrls = watch.getImageUrls().stream().toList();
+//        return imageUrls;
+//    }
 
     @Transactional
     @Override
@@ -114,40 +115,40 @@ public class WatchServiceImpl implements WatchService {
         return WatchResponseDTO.valueOf(watch);
     }
 
-    @Transactional
-    @Override
-    public void saveImageNamesFromDirectory(Long id) throws IOException {
-        // Buscar o relógio pelo ID
-        Watch watch = watchRepository.findById(id);
-        if (watch == null) {
-            throw new NotFoundException("Watch não encontrado com o ID: " + id);
-        }
-
-        // Caminho do diretório de imagens baseado no ID do relógio
-        Path imageDirectory = Paths.get("src/main/resources/images/" + id);
-
-        // Verificar se o diretório existe
-        if (!Files.exists(imageDirectory) || !Files.isDirectory(imageDirectory)) {
-            throw new NotFoundException("Diretório de imagens não encontrado para o Watch com ID: " + id);
-        }
-
-        // Obter a lista atual de nomes de imagens (ou inicializar uma lista vazia se for nulo)
-        List<String> imageNames = new ArrayList<>(watch.getImageUrls() != null ? watch.getImageUrls() : new ArrayList<>());
-
-        // Listar os arquivos de imagem no diretório e adicionar seus nomes, evitando duplicatas
-        try (Stream<Path> paths = Files.list(imageDirectory)) {
-            paths.filter(Files::isRegularFile) // Filtra apenas arquivos regulares (imagens)
-                    .map(path -> path.getFileName().toString()) // Obtém o nome do arquivo
-                    .filter(imageName -> !imageNames.contains(imageName)) // Evita duplicatas
-                    .forEach(imageNames::add); // Adiciona o nome à lista
-        }
-
-        // Atualizar a lista de nomes de imagens no Watch
-        watch.setImageUrls(imageNames);
-
-        // Persistir as alterações no banco de dados
-        watchRepository.persist(watch);
-    }
+//    @Transactional
+//    @Override
+//    public void saveImageNamesFromDirectory(Long id) throws IOException {
+//        // Buscar o relógio pelo ID
+//        Watch watch = watchRepository.findById(id);
+//        if (watch == null) {
+//            throw new NotFoundException("Watch não encontrado com o ID: " + id);
+//        }
+//
+//        // Caminho do diretório de imagens baseado no ID do relógio
+//        Path imageDirectory = Paths.get("src/main/resources/images/" + id);
+//
+//        // Verificar se o diretório existe
+//        if (!Files.exists(imageDirectory) || !Files.isDirectory(imageDirectory)) {
+//            throw new NotFoundException("Diretório de imagens não encontrado para o Watch com ID: " + id);
+//        }
+//
+//        // Obter a lista atual de nomes de imagens (ou inicializar uma lista vazia se for nulo)
+//        List<String> imageNames = new ArrayList<>(watch.getImageUrls() != null ? watch.getImageUrls() : new ArrayList<>());
+//
+//        // Listar os arquivos de imagem no diretório e adicionar seus nomes, evitando duplicatas
+//        try (Stream<Path> paths = Files.list(imageDirectory)) {
+//            paths.filter(Files::isRegularFile) // Filtra apenas arquivos regulares (imagens)
+//                    .map(path -> path.getFileName().toString()) // Obtém o nome do arquivo
+//                    .filter(imageName -> !imageNames.contains(imageName)) // Evita duplicatas
+//                    .forEach(imageNames::add); // Adiciona o nome à lista
+//        }
+//
+//        // Atualizar a lista de nomes de imagens no Watch
+//        watch.setImageUrls(imageNames);
+//
+//        // Persistir as alterações no banco de dados
+//        watchRepository.persist(watch);
+//    }
 
 
 
