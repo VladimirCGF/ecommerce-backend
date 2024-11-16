@@ -77,7 +77,7 @@ INSERT INTO address (address, state_id, municipality_id, cep, client_id)
 VALUES ('307 SUL', 27, 27, '77015-468', 1);
 
 -- -- Watch
-INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism)
+INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism, imagePerfil)
 VALUES ('Relógio XYZ',
         'Relógio moderno com design elegante',
         300.00,
@@ -86,9 +86,9 @@ VALUES ('Relógio XYZ',
         'Masculino',
         'Marca ABC',
         'Redondo',
-        'Automático');
+        'Automático', 'perfil.jpg');
 
-INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism)
+INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism, imagePerfil)
 VALUES ('Relógio',
         'Relógio moderno com design elegante',
         100.00,
@@ -97,7 +97,7 @@ VALUES ('Relógio',
         'Masculino',
         'Marca ABC',
         'Redondo',
-        'Automático');
+        'Automático', 'perfil.jpg');
 
 -- -- Stock
 INSERT INTO stock (watch_id, quantity)

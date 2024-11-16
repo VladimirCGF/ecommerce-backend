@@ -3,20 +3,22 @@ package br.com.ecommerce.relogios.resource;
 import br.com.ecommerce.relogios.dto.WatchDTO;
 import br.com.ecommerce.relogios.dto.WatchResponseDTO;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
-import br.com.ecommerce.relogios.form.FileUploadForm;
+import br.com.ecommerce.relogios.form.WatchImageForm;
 import br.com.ecommerce.relogios.model.Watch;
 import br.com.ecommerce.relogios.repository.WatchRepository;
+import br.com.ecommerce.relogios.service.FileService;
 import br.com.ecommerce.relogios.service.WatchService;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 
@@ -31,9 +33,10 @@ public class WatchResource {
     @Inject
     WatchRepository watchRepository;
 
-    private static final Logger LOG = Logger.getLogger(WatchResource.class);
+    @Inject
+    FileService fileService;
 
-//    private static final String UPLOAD_DIR = "uploads";
+    private static final Logger LOG = Logger.getLogger(WatchResource.class);
 
     private static final String UPLOAD_DIR = "/path/to/your/uploads";
 
@@ -120,113 +123,74 @@ public class WatchResource {
         }
     }
 
-
-    @POST
-    @Path("/{id}/upload-imagem")
+    @PATCH
+    @Path("/image/upload/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Transactional
-    public Response uploadImagem(@PathParam("id") Long id, @MultipartForm FileUploadForm form) {
+    public Response saveImage(@PathParam("id") Long id, @MultipartForm WatchImageForm form) {
+        try {
+            fileService.save(id, form.getNameImage(), form.getImagem());
+            return Response.noContent().build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"message\": \"Erro ao salvar a imagem\", \"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
 
-        // Verifica se o relógio existe
+
+    @GET
+    @Path("/image/download/{id}/{nameImage}")
+    public Response download(@PathParam("id") Long id, @PathParam("nameImage") String nameImage) {
+        try {
+            InputStream imagemStream = fileService.download(id, nameImage);
+            String contentType = Files.probeContentType(Paths.get(nameImage));
+
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            Response.ResponseBuilder response = Response.ok(imagemStream);
+            response.header("Content-Disposition", "attachment;filename=" + nameImage);
+            response.header("Content-Type", contentType);
+
+            return response.build();
+        } catch (IOException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Imagem não encontrada: " + nameImage).build();
+        }
+    }
+
+    @GET
+    @Path("/images/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getImagesByWatchId(@PathParam("id") Long id) {
         Watch watch = watchRepository.findById(id);
         if (watch == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Watch não encontrado").build();
+            throw new NotFoundException("Watch não encontrado com o ID: " + id);
         }
 
-        // Cria o diretório de upload se não existir
-        File uploadDir = new File(UPLOAD_DIR);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+        List<String> imageUrls = watch.getImageUrls();
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .entity("Nenhuma imagem encontrada para este relógio")
+                    .build();
         }
 
-        // Pega o nome do arquivo da solicitação
-        String fileName = form.getFileData().toString();  // Obtém automaticamente o nome do arquivo enviado
-        if (fileName == null || fileName.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Nome do arquivo não fornecido").build();
-        }
-
-        // Define o caminho completo para salvar a imagem
-        String imageUrl = UPLOAD_DIR + "/" + id + "-" + fileName;  // O nome do arquivo será automaticamente obtido
-
-        try (InputStream in = form.getFileData();
-             OutputStream out = new FileOutputStream(imageUrl)) {
-
-            byte[] buffer = new byte[1024]; // Buffer para transferência de dados
-            int len;
-            while ((len = in.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-            }
-
-            // Adiciona a nova URL à lista de URLs de imagem
-            List<String> imageUrls = watch.getImageUrl();
-            if (imageUrls == null) {
-                imageUrls = new ArrayList<>();
-                watch.setImageUrl(imageUrls);
-            }
-            imageUrls.add(imageUrl);  // Adiciona a URL da imagem ao objeto watch
-
-            // Persiste a alteração no banco de dados
-            watchRepository.persist(watch);
-
-            return Response.ok("Imagem enviada com sucesso").build();
-        } catch (IOException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao salvar a imagem: " + e.getMessage()).build();
-        }
+        return Response.ok(imageUrls).build();
     }
 
-
-    public static class UploadResponse {
-        public String fileName;
-
-        public UploadResponse(String fileName) {
-            this.fileName = fileName;
-        }
-
-        public String getFileName() {
-            return fileName;
-        }
-    }
-
-
-    @GET
-    @Path("/{id}/download-imagem")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON})
-    public Response downloadImagem(@PathParam("id") Long id, @QueryParam("imageIndex") int imageIndex) {
-        // Verifica se o Watch existe
-        Watch watch = watchRepository.findById(id);
-        if (watch == null || watch.getImageUrl() == null || watch.getImageUrl().isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Watch ou imagens não encontradas").build();
-        }
-
-        // Verifica se o índice é válido
-        List<String> imageUrls = watch.getImageUrl();
-        if (imageIndex < 0 || imageIndex >= imageUrls.size()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Índice de imagem inválido").build();
-        }
-
-        // Obtém o caminho completo da imagem pelo índice
-        String imageUrl = imageUrls.get(imageIndex);
-        File file = new File(imageUrl);
-        if (!file.exists()) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Imagem não encontrada").build();
-        }
-
-        // Cria uma resposta para enviar o arquivo
-        Response.ResponseBuilder response = Response.ok(file);
-        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
-        return response.build();
+    @PUT
+    @Path("atualizarImageUrl/{id}")
+    public Response saveImageNamesFromDirectory(@PathParam("id") Long id) throws IOException {
+        watchService.saveImageNamesFromDirectory(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @GET
-    @Path("image/{fileName}")
-    @Produces({"image/png", "image/jpeg", "image/jpg", "image/gif"})
-    public Response getImage( @PathParam("fileName") String fileName) {
-        File imageFile = new File(UPLOAD_DIR,fileName);
-        if (!imageFile.exists()) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Imagem não encontrada").build();
-        }
-        return Response.ok(imageFile).build();
+    @Path("/imageUrlsById/{id}")
+    public Response getImageUrlsById(@PathParam("id") Long id) {
+        List<String> imageUrls = watchService.getImageUrlsById(id);
+        return Response.ok(imageUrls).build();
     }
-
 
 }

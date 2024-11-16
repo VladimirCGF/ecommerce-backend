@@ -19,10 +19,12 @@ public class Watch extends DefaultEntity {
     private String format;
     private String mechanism;
 
+    private String imagePerfil;
+
     @ElementCollection
     @CollectionTable(name = "watch_images")
     @Column(name = "image_url") //
-    private List<String> imageUrl = new ArrayList<>();
+    private List<String> imageUrls = new ArrayList<>();
 
     @OneToMany(mappedBy = "watch", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
@@ -99,12 +101,20 @@ public class Watch extends DefaultEntity {
         this.mechanism = mechanism;
     }
 
-    public List<String> getImageUrl() {
-        return imageUrl;
+    public String getImagePerfil() {
+        return imagePerfil;
     }
 
-    public void setImageUrl(List<String> imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImagePerfil(String imagePerfil) {
+        this.imagePerfil = imagePerfil;
+    }
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 
     public List<OrderItem> getOrderItems() {

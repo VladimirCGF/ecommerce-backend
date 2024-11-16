@@ -25,10 +25,10 @@ public class FileUploadForm {
     }
 
     public String getFileName() {
-        return fileData.toString();
+        return fileName;
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileData.toString();
+        this.fileName = fileName;
     }
 }

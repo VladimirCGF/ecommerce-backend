@@ -15,9 +15,10 @@ public record WatchResponseDTO(
         String brand,
         String format,
         String mechanism,
+        String imagePerfil,
         List<String> imageUrls) {
     public static WatchResponseDTO valueOf(Watch watch) {
-        List<String> imageUrls = watch.getImageUrl().stream().toList();
+        List<String> imagens = watch.getImageUrls().stream().toList();
         return new WatchResponseDTO(
                 watch.getId(),
                 watch.getName(),
@@ -29,6 +30,7 @@ public record WatchResponseDTO(
                 watch.getBrand(),
                 watch.getFormat(),
                 watch.getMechanism(),
-                imageUrls);
+                watch.getImagePerfil(),
+                imagens);
     }
 }
