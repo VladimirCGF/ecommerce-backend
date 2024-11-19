@@ -45,4 +45,8 @@ public class DefaultEntity {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

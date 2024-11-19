@@ -364,15 +364,15 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
-    @Transactional
-    @Override
-    @Scheduled(cron = "*/10 * * * * ?")
-    public void cancelExpiredOrders() {
-        List<Orders> expiredOrders = ordersRepository.findExpiredOrders(LocalDateTime.now());
-        for (Orders order : expiredOrders) {
-            order.setStatus(OrdersStatus.CANCELLED);
-            ordersRepository.persist(order);
-        }
-    }
+//    @Transactional
+//    @Override
+//    @Scheduled(cron = "*/10 * * * * ?")
+//    public void cancelExpiredOrders() {
+//        List<Orders> expiredOrders = ordersRepository.findExpiredOrders(LocalDateTime.now());
+//        for (Orders order : expiredOrders) {
+//            order.setStatus(OrdersStatus.CANCELLED);
+//            ordersRepository.persist(order);
+//        }
+//    }
 
 }

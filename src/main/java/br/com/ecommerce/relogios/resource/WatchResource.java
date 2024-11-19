@@ -1,12 +1,13 @@
 package br.com.ecommerce.relogios.resource;
 
+import br.com.ecommerce.relogios.dto.StorageDTO;
 import br.com.ecommerce.relogios.dto.WatchDTO;
 import br.com.ecommerce.relogios.dto.WatchResponseDTO;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
-import br.com.ecommerce.relogios.form.WatchImageForm;
-import br.com.ecommerce.relogios.model.Watch;
+import br.com.ecommerce.relogios.form.StorageForm;
 import br.com.ecommerce.relogios.repository.WatchRepository;
 import br.com.ecommerce.relogios.service.FileService;
+import br.com.ecommerce.relogios.service.StorageService;
 import br.com.ecommerce.relogios.service.WatchService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -35,6 +36,9 @@ public class WatchResource {
 
     @Inject
     FileService fileService;
+
+    @Inject
+    StorageService storageService;
 
     private static final Logger LOG = Logger.getLogger(WatchResource.class);
 
@@ -123,18 +127,19 @@ public class WatchResource {
         }
     }
 
-    @PATCH
+    @PUT
     @Path("/image/upload/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response saveImage(@PathParam("id") Long id, @MultipartForm WatchImageForm form) {
+    public Response saveImage(@PathParam("id") Long id, @MultipartForm StorageForm form) {
         try {
-            fileService.save(id, form.getNameImage(), form.getImagem());
-            return Response.noContent().build();
+            LOG.info("Executando o create");
+            StorageDTO storageDTO = new StorageDTO(form.getIdWatch(), form.getName());
+            watchService.uploadImagePerfil(id, storageDTO, form.imagem);
+            LOG.info("Armazenamento criado com sucesso");
+            return Response.status(Response.Status.NO_CONTENT).build();
         } catch (IOException e) {
-            e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"message\": \"Erro ao salvar a imagem\", \"error\": \"" + e.getMessage() + "\"}")
-                    .build();
+            LOG.error("Erro ao criar" + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao criar: " + e.getMessage()).build();
         }
     }
 

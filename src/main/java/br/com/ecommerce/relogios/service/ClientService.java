@@ -43,6 +43,6 @@ public interface ClientService {
 
     boolean checkEmailUnique(Long id, String email);
 
-    public void cancelExpiredOrders();
+//    public void cancelExpiredOrders();
 
 }

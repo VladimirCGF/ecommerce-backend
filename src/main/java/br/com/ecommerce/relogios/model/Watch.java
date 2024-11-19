@@ -1,9 +1,7 @@
 package br.com.ecommerce.relogios.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,9 @@ public class Watch extends DefaultEntity {
     private String format;
     private String mechanism;
 
-    private String imagePerfil;
+    @OneToOne
+    @JsonManagedReference
+    private Storage imagePerfil;
 
     @OneToMany(mappedBy = "watch", cascade = CascadeType.ALL)
     private List<Storage> storages;
@@ -102,11 +102,11 @@ public class Watch extends DefaultEntity {
         this.mechanism = mechanism;
     }
 
-    public String getImagePerfil() {
+    public Storage getImagePerfil() {
         return imagePerfil;
     }
 
-    public void setImagePerfil(String imagePerfil) {
+    public void setImagePerfil(Storage imagePerfil) {
         this.imagePerfil = imagePerfil;
     }
 

@@ -65,11 +65,10 @@ public class StorageServiceImp implements StorageService {
         if (watch == null) {
             throw new NotFoundException("Watch not found");
         }
-
-        String img = imagem.toString();
-        storage.setName(img);
+        String uniqueFileName = getUniqueFileName(storageDTO.name());
         storage.setWatch(watch);
-        File file = fileService.save(storage.getWatch().getId(), storage.getName(), imagem);
+        File file = fileService.save(storage.getWatch().getId(), uniqueFileName, imagem);
+        storage.setName(uniqueFileName);
         storage.setUrl(file.getAbsolutePath());
         storageRepository.persist(storage);
         return StorageResponseDTO.valueOf(storage);
@@ -106,13 +105,19 @@ public class StorageServiceImp implements StorageService {
         storageRepository.deleteById(id);
     }
 
-    @Override
-    public long count() {
-        return storageRepository.count();
+    private String getUniqueFileName(String baseName) {
+        String nameWithoutExtension = baseName.substring(0, baseName.lastIndexOf('.'));
+        String extension = baseName.substring(baseName.lastIndexOf('.'));
+
+        String newName = baseName;
+        int counter = 1;
+
+        while (storageRepository.existsByName(newName)) {
+            System.out.println("Checking existence of: " + newName);
+            newName = nameWithoutExtension + "(" + counter + ")" + extension;
+            counter++;
+        }
+        return newName;
     }
 
-    @Override
-    public long countByNome(String name) {
-        return storageRepository.findByName(name).count();
-    }
 }

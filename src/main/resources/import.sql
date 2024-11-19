@@ -76,40 +76,40 @@ VALUES ('Bob', 'Silva', '123.456.789-00', 2);
 INSERT INTO address (address, state_id, municipality_id, cep, client_id)
 VALUES ('307 SUL', 27, 27, '77015-468', 1);
 
--- -- Watch
-INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism, imagePerfil)
-VALUES ('Relógio XYZ',
-        'Relógio moderno com design elegante',
-        300.00,
-        'Aço inoxidável',
-        'Prata',
-        'Masculino',
-        'Marca ABC',
-        'Redondo',
-        'Automático', 'perfil.jpg');
-
-INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism, imagePerfil)
-VALUES ('Relógio',
-        'Relógio moderno com design elegante',
-        100.00,
-        'Aço inoxidável',
-        'Prata',
-        'Masculino',
-        'Marca ABC',
-        'Redondo',
-        'Automático', 'perfil.jpg');
-
--- -- Stock
-INSERT INTO stock (watch_id, quantity)
-VALUES (1, 50);
-INSERT INTO stock (watch_id, quantity)
-VALUES (2, 50);
-
--- Coupon
-INSERT INTO coupon (code, discountPercentage, validUntil)
-VALUES ('10COUPON', 10, '2025-03-10');
-
--- -- Orders
-INSERT INTO orders (orderDate, totalPrice, status, client_id, address_id)
-VALUES ('2024-09-22 08:46:46.159923', 0, 2, 1, 1);
+-- -- -- Watch
+-- INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism)
+-- VALUES ('Relógio XYZ',
+--         'Relógio moderno com design elegante',
+--         300.00,
+--         'Aço inoxidável',
+--         'Prata',
+--         'Masculino',
+--         'Marca ABC',
+--         'Redondo',
+--         'Automático');
+--
+-- INSERT INTO watch (name, description, price, material, color, gender, brand, format, mechanism)
+-- VALUES ('Relógio',
+--         'Relógio moderno com design elegante',
+--         100.00,
+--         'Aço inoxidável',
+--         'Prata',
+--         'Masculino',
+--         'Marca ABC',
+--         'Redondo',
+--         'Automático');
+--
+-- -- -- Stock
+-- INSERT INTO stock (watch_id, quantity)
+-- VALUES (1, 50);
+-- INSERT INTO stock (watch_id, quantity)
+-- VALUES (2, 50);
+--
+-- -- Coupon
+-- INSERT INTO coupon (code, discountPercentage, validUntil)
+-- VALUES ('10COUPON', 10, '2025-03-10');
+--
+-- -- -- Orders
+-- INSERT INTO orders (orderDate, totalPrice, status, client_id, address_id)
+-- VALUES ('2024-09-22 08:46:46.159923', 0, 2, 1, 1);
 

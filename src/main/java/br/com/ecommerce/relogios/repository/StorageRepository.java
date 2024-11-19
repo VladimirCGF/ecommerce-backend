@@ -1,7 +1,6 @@
 package br.com.ecommerce.relogios.repository;
 
 import br.com.ecommerce.relogios.model.Storage;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -14,15 +13,8 @@ public class StorageRepository implements PanacheRepository<Storage> {
         return find("watch.id", id).list();
     }
 
-    public PanacheQuery<Storage> findByName(String name) {
-        if (name == null)
-            return null;
-        return find("UPPER(nome) LIKE ?1 ", "%" + name.toUpperCase() + "%");
-    }
-
-    public Boolean existsByName(String name) {
-        return find("UPPER(storage.name)  = ?1", name.toUpperCase()) != null;
-
+    public boolean existsByName(String name) {
+        return count("UPPER(name) = ?1", name.toUpperCase()) > 0;
     }
 
 

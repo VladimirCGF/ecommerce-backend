@@ -1,6 +1,7 @@
 package br.com.ecommerce.relogios.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.NotFoundException;
 
 import java.io.*;
 

@@ -21,7 +21,4 @@ public interface StorageService {
 
     public List<StorageResponseDTO> findAllByWatchId(Long id);
 
-    public long count();
-
-    public long countByNome(String name);
 }

@@ -1,9 +1,7 @@
 package br.com.ecommerce.relogios.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "storage")
@@ -13,7 +11,8 @@ public class Storage extends DefaultEntity {
 
     private String url;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "watch_id")
     private Watch watch;
 
@@ -40,4 +39,5 @@ public class Storage extends DefaultEntity {
     public void setWatch(Watch watch) {
         this.watch = watch;
     }
+
 }
