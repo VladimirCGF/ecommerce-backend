@@ -4,6 +4,7 @@ import br.com.ecommerce.relogios.dto.EmployeeDTO;
 import br.com.ecommerce.relogios.dto.EmployeeResponseDTO;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
 import br.com.ecommerce.relogios.service.EmployeeService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -22,7 +23,7 @@ public class EmployeeResource {
 
     private static final Logger LOG = Logger.getLogger(EmployeeResource.class);
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {
@@ -36,7 +37,7 @@ public class EmployeeResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -54,7 +55,7 @@ public class EmployeeResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(EmployeeDTO employeeDTO) {
         try {
@@ -69,7 +70,7 @@ public class EmployeeResource {
     }
 
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, EmployeeDTO employeeDTO) {
@@ -87,7 +88,7 @@ public class EmployeeResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {

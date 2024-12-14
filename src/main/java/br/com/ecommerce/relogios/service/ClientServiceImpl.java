@@ -5,12 +5,12 @@ import br.com.ecommerce.relogios.exceptions.EmailAlreadyInUseException;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
 import br.com.ecommerce.relogios.model.*;
 import br.com.ecommerce.relogios.repository.*;
-import io.quarkus.scheduler.Scheduled;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
+import org.jboss.logging.Logger;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +18,8 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class ClientServiceImpl implements ClientService {
+
+    private static final Logger LOG = Logger.getLogger(ClientServiceImpl.class);
 
     @Inject
     ClientRepository clientRepository;
@@ -170,6 +172,21 @@ public class ClientServiceImpl implements ClientService {
         }
         return client;
     }
+
+    @Transactional
+    @Override
+    public void trocarSenha(UserDTO userDTO) {
+        User aux = userRepository.findByEmail(getLoggedClient().getUser().getEmail());
+        Address address = new Address();
+        Client client = clientRepository.findByEmail(aux.getEmail());
+        User user = userRepository.findById(aux.getId());
+        if (user == null) {
+            throw new NotFoundException("User não encontrado");
+        }
+        user.setPassword(hashService.getHashPassword(userDTO.password()));
+        userRepository.persist(user);
+    }
+
 
     @Transactional
     @Override

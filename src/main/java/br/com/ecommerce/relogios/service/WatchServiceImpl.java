@@ -117,15 +117,15 @@ public class WatchServiceImpl implements WatchService {
         watchRepository.persist(watch);
     }
 
-    @Transactional
-    @Override
-    public List<WatchResponseDTO> getWatchesByOrderId(Long orderId) {
-        return watchRepository
-                .findWatchesByOrderId(orderId)
-                .stream()
-                .map(WatchResponseDTO::valueOf).toList();
-
-    }
+//    @Transactional
+//    @Override
+//    public List<OrderItemListResponseDTO> getWatchesByOrderId(Long orderId) {
+//        return watchRepository
+//                .findWatchesByOrderId(orderId)
+//                .stream()
+//                .map(OrderItemListResponseDTO::valueOf).toList();
+//
+//    }
 
     @Transactional
     @Override

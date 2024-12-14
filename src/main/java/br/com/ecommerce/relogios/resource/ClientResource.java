@@ -23,7 +23,7 @@ public class ClientResource {
 
     private static final Logger LOG = Logger.getLogger(ClientResource.class);
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {
@@ -37,7 +37,7 @@ public class ClientResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -55,7 +55,7 @@ public class ClientResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(ClientDTO clientDTO) {
         try {
@@ -70,7 +70,7 @@ public class ClientResource {
     }
 
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, ClientDTO clientDTO) {
@@ -88,7 +88,7 @@ public class ClientResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
@@ -108,7 +108,7 @@ public class ClientResource {
 
     @GET
     @Path("findByEmail/{email}")
-    public Response clientFindByEmail(@PathParam("email") String email){
+    public Response clientFindByEmail(@PathParam("email") String email) {
         return Response.ok(clientService.findByEmail(email)).build();
     }
 
@@ -184,6 +184,24 @@ public class ClientResource {
         } catch (Exception e) {
             LOG.error("Erro ao adicionar Item", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao adicionar Item").build();
+        }
+    }
+
+    @RolesAllowed("Cliente")
+    @PUT
+    @Path("/trocar-senha")
+    public Response trocarSenha(UserDTO userDTO) {
+        try {
+            LOG.info("Executando o update");
+            clientService.trocarSenha(userDTO);
+            LOG.info("Usuário atualizado com sucesso");
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (NotFoundException e) {
+            LOG.warn("Usuário não encontrado");
+            return Response.status(Response.Status.NOT_FOUND).entity("Usuário não encontrado").build();
+        } catch (ValidationException e) {
+            LOG.error("Erro ao atualizar Usuário", e);
+            return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao atualizar Usuário").build();
         }
     }
 
@@ -295,7 +313,6 @@ public class ClientResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Orders não encontrado").build();
         }
     }
-
 
 
     @RolesAllowed("Cliente")

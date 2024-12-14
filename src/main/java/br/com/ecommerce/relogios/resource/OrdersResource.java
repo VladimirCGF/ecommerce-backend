@@ -24,7 +24,7 @@ public class OrdersResource {
 
     private static final Logger LOG = Logger.getLogger(OrdersResource.class);
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+
     @GET
     public Response findAll() {
         try {
@@ -38,7 +38,7 @@ public class OrdersResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -56,7 +56,7 @@ public class OrdersResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(OrdersDTO ordersDTO) {
         try {
@@ -70,7 +70,7 @@ public class OrdersResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, OrdersDTO ordersDTO) {
@@ -88,7 +88,7 @@ public class OrdersResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {

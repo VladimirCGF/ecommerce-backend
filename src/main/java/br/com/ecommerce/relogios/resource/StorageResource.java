@@ -6,6 +6,7 @@ import br.com.ecommerce.relogios.exceptions.ValidationException;
 import br.com.ecommerce.relogios.form.StorageForm;
 import br.com.ecommerce.relogios.service.FileService;
 import br.com.ecommerce.relogios.service.StorageService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -32,6 +33,7 @@ public class StorageResource {
 
     private static final Logger LOG = Logger.getLogger(StorageResource.class);
 
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     @Path("/image/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -50,7 +52,6 @@ public class StorageResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao criar: " + e.getMessage()).build();
         }
     }
-
 
     @GET
     public Response findAll() {
@@ -83,6 +84,7 @@ public class StorageResource {
     }
 
 
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -100,6 +102,7 @@ public class StorageResource {
         }
     }
 
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("{id}/image/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -121,6 +124,7 @@ public class StorageResource {
         }
     }
 
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {

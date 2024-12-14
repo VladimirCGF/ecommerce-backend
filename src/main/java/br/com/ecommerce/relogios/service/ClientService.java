@@ -22,6 +22,8 @@ public interface ClientService {
 
     public Client getLoggedClient();
 
+    public void trocarSenha(UserDTO userDTO);
+
     public void addAddress(AddressDTO addressDTO);
 
     public void removeAddress(Long id);

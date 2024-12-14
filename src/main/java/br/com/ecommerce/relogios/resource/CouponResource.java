@@ -4,8 +4,7 @@ import br.com.ecommerce.relogios.dto.CouponDTO;
 import br.com.ecommerce.relogios.dto.CouponResponseDTO;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
 import br.com.ecommerce.relogios.service.CouponService;
-import io.smallrye.common.annotation.Blocking;
-import io.smallrye.mutiny.Uni;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -24,7 +23,7 @@ public class CouponResource {
 
     private static final Logger LOG = Logger.getLogger(CouponResource.class);
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {
@@ -38,7 +37,7 @@ public class CouponResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -56,7 +55,7 @@ public class CouponResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(CouponDTO couponDTO) {
         try {
@@ -70,7 +69,7 @@ public class CouponResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, CouponDTO couponDTO) {
@@ -88,7 +87,7 @@ public class CouponResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {

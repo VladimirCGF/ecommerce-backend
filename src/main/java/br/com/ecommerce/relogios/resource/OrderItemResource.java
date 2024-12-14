@@ -1,7 +1,7 @@
 package br.com.ecommerce.relogios.resource;
 
-import br.com.ecommerce.relogios.dto.ClientResponseDTO;
 import br.com.ecommerce.relogios.dto.OrderItemDTO;
+import br.com.ecommerce.relogios.dto.OrderItemListResponseDTO;
 import br.com.ecommerce.relogios.dto.OrderItemResponseDTO;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
 import br.com.ecommerce.relogios.service.OrderItemService;
@@ -24,7 +24,6 @@ public class OrderItemResource {
 
     private static final Logger LOG = Logger.getLogger(OrderItemResource.class);
 
-//    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {
@@ -38,7 +37,6 @@ public class OrderItemResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -56,7 +54,7 @@ public class OrderItemResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(OrderItemDTO orderItemDTO) {
         try {
@@ -70,7 +68,7 @@ public class OrderItemResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, OrderItemDTO orderItemDTO) {
@@ -88,7 +86,7 @@ public class OrderItemResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
@@ -104,6 +102,13 @@ public class OrderItemResource {
             LOG.error("Erro ao deletar OrderItem", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao deletar OrderItem").build();
         }
+    }
+
+    @GET
+    @Path("/by-order/{orderId}")
+    public Response getWatchesByOrder(@PathParam("orderId") Long orderId) {
+        List<OrderItemListResponseDTO> watches = orderItemService.getWatchesByOrderId(orderId);
+        return Response.ok(watches).build();
     }
 
     @PATCH

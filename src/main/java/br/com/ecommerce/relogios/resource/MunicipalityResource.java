@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.annotation.security.RolesAllowed;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class MunicipalityResource {
 
     private static final Logger LOG = Logger.getLogger(MunicipalityResource.class);
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {
@@ -36,7 +37,7 @@ public class MunicipalityResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -54,7 +55,7 @@ public class MunicipalityResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(MunicipalityDTO municipalityDTO) {
         try {
@@ -68,7 +69,7 @@ public class MunicipalityResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, MunicipalityDTO municipalityDTO) {
@@ -86,7 +87,7 @@ public class MunicipalityResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {

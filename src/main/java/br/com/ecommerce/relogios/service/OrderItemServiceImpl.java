@@ -1,6 +1,7 @@
 package br.com.ecommerce.relogios.service;
 
 import br.com.ecommerce.relogios.dto.OrderItemDTO;
+import br.com.ecommerce.relogios.dto.OrderItemListResponseDTO;
 import br.com.ecommerce.relogios.dto.OrderItemResponseDTO;
 import br.com.ecommerce.relogios.model.OrderItem;
 import br.com.ecommerce.relogios.model.Orders;
@@ -128,6 +129,23 @@ public class OrderItemServiceImpl implements OrderItemService {
         order.setTotalPrice(totalPrice);
         orderItemRepository.persist(orderItem);
         ordersRepository.persist(order);
+    }
+
+    @Transactional
+    @Override
+    public List<OrderItemListResponseDTO> getWatchesByOrderId(Long orderId) {
+        List<OrderItem> orderItemList = orderItemRepository.findByIdOrder(orderId);
+        return orderItemList.stream().map(orderItem -> {
+                    return new OrderItemListResponseDTO(
+                            orderItem.getId(),
+                            orderItem.getWatch().getId(),
+                            orderItem.getWatch().getImagePerfil().getName(),
+                            orderItem.getWatch().getName(),
+                            orderItem.getPrice(),
+                            orderItem.getQuantity()
+                    );
+                }
+        ).toList();
     }
 
 

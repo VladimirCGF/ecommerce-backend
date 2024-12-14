@@ -10,6 +10,7 @@ import br.com.ecommerce.relogios.repository.WatchRepository;
 import br.com.ecommerce.relogios.service.FileService;
 import br.com.ecommerce.relogios.service.StorageService;
 import br.com.ecommerce.relogios.service.WatchService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -45,7 +46,7 @@ public class WatchResource {
 
     private static final String UPLOAD_DIR = "/path/to/your/uploads";
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+
     @GET
     public Response findAll() {
         try {
@@ -59,7 +60,7 @@ public class WatchResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("view/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -77,7 +78,7 @@ public class WatchResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(WatchDTO watchDTO) {
         try {
@@ -92,7 +93,7 @@ public class WatchResource {
     }
 
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, WatchDTO watchDTO) {
@@ -110,7 +111,7 @@ public class WatchResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
@@ -161,12 +162,12 @@ public class WatchResource {
         }
     }
 
-    @GET
-    @Path("/by-order/{orderId}")
-    public Response getWatchesByOrder(@PathParam("orderId") Long orderId) {
-        List<WatchResponseDTO> watches = watchService.getWatchesByOrderId(orderId);
-        return Response.ok(watches).build();
-    }
+//    @GET
+//    @Path("/by-order/{orderId}")
+//    public Response getWatchesByOrder(@PathParam("orderId") Long orderId) {
+//        List<WatchListResponseDTO> watches = watchService.getWatchesByOrderId(orderId);
+//        return Response.ok(watches).build();
+//    }
 
     @GET
     @Path("/findByName/{name}")

@@ -23,7 +23,7 @@ public class UserResource {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class);
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {

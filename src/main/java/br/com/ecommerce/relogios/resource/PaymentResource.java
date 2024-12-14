@@ -23,7 +23,7 @@ public class PaymentResource {
 
     private static final Logger LOG = Logger.getLogger(PaymentResource.class);
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {
@@ -37,7 +37,7 @@ public class PaymentResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -55,7 +55,7 @@ public class PaymentResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(PaymentDTO paymentDTO) {
         try {
@@ -69,7 +69,7 @@ public class PaymentResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, PaymentDTO paymentDTO) {
@@ -87,7 +87,7 @@ public class PaymentResource {
         }
     }
 
-//    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {

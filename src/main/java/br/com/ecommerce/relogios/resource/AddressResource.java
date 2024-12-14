@@ -4,6 +4,7 @@ import br.com.ecommerce.relogios.dto.AddressDTO;
 import br.com.ecommerce.relogios.dto.AddressResponseDTO;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
 import br.com.ecommerce.relogios.service.AddressService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -22,7 +23,7 @@ public class AddressResource {
 
     private static final Logger LOG = Logger.getLogger(AddressResource.class);
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+//    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     public Response findAll() {
         try {
@@ -36,7 +37,7 @@ public class AddressResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -54,7 +55,7 @@ public class AddressResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(AddressDTO addressDTO) {
         try {
@@ -68,7 +69,7 @@ public class AddressResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, AddressDTO addressDTO) {
@@ -86,7 +87,7 @@ public class AddressResource {
         }
     }
 
-    //    @RolesAllowed({"Admin", "Funcionario"})
+    @RolesAllowed({"Admin", "Funcionario"})
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
