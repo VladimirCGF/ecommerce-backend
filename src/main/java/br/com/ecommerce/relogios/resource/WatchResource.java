@@ -2,6 +2,7 @@ package br.com.ecommerce.relogios.resource;
 
 import br.com.ecommerce.relogios.dto.StorageDTO;
 import br.com.ecommerce.relogios.dto.WatchDTO;
+import br.com.ecommerce.relogios.dto.WatchListResponseDTO;
 import br.com.ecommerce.relogios.dto.WatchResponseDTO;
 import br.com.ecommerce.relogios.exceptions.ValidationException;
 import br.com.ecommerce.relogios.form.StorageForm;
@@ -49,7 +50,7 @@ public class WatchResource {
     public Response findAll() {
         try {
             LOG.info("Executando o findAll");
-            List<WatchResponseDTO> watches = watchService.findAll();
+            List<WatchListResponseDTO> watches = watchService.findAll();
             LOG.info("Sucesso");
             return Response.ok(watches).build();
         } catch (NotFoundException e) {
@@ -76,7 +77,7 @@ public class WatchResource {
         }
     }
 
-    //        @RolesAllowed({"Admin", "Funcionario"})
+    //    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(WatchDTO watchDTO) {
         try {
@@ -143,59 +144,35 @@ public class WatchResource {
         }
     }
 
-
     @GET
     @Path("/image/download/{id}/{nameImage}")
     public Response download(@PathParam("id") Long id, @PathParam("nameImage") String nameImage) {
         try {
             InputStream imagemStream = fileService.download(id, nameImage);
-            String contentType = Files.probeContentType(Paths.get(nameImage));
 
+            String contentType = Files.probeContentType(Paths.get(nameImage));
             if (contentType == null) {
                 contentType = "application/octet-stream";
             }
 
-            Response.ResponseBuilder response = Response.ok(imagemStream);
-            response.header("Content-Disposition", "attachment;filename=" + nameImage);
-            response.header("Content-Type", contentType);
-
-            return response.build();
+            return Response.ok(imagemStream, contentType).build();
         } catch (IOException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("Imagem não encontrada: " + nameImage).build();
         }
     }
 
-//    @GET
-//    @Path("/images/{id}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getImagesByWatchId(@PathParam("id") Long id) {
-//        Watch watch = watchRepository.findById(id);
-//        if (watch == null) {
-//            throw new NotFoundException("Watch não encontrado com o ID: " + id);
-//        }
-//
-//        List<String> imageUrls = watch.getImageUrls();
-//        if (imageUrls == null || imageUrls.isEmpty()) {
-//            return Response.status(Response.Status.NO_CONTENT)
-//                    .entity("Nenhuma imagem encontrada para este relógio")
-//                    .build();
-//        }
-//
-//        return Response.ok(imageUrls).build();
-//    }
-//
-//    @PUT
-//    @Path("atualizarImageUrl/{id}")
-//    public Response saveImageNamesFromDirectory(@PathParam("id") Long id) throws IOException {
-//        watchService.saveImageNamesFromDirectory(id);
-//        return Response.status(Response.Status.NO_CONTENT).build();
-//    }
-//
-//    @GET
-//    @Path("/imageUrlsById/{id}")
-//    public Response getImageUrlsById(@PathParam("id") Long id) {
-//        List<String> imageUrls = watchService.getImageUrlsById(id);
-//        return Response.ok(imageUrls).build();
-//    }
+    @GET
+    @Path("/by-order/{orderId}")
+    public Response getWatchesByOrder(@PathParam("orderId") Long orderId) {
+        List<WatchResponseDTO> watches = watchService.getWatchesByOrderId(orderId);
+        return Response.ok(watches).build();
+    }
+
+    @GET
+    @Path("/findByName/{name}")
+    public Response getWatchesByName(@PathParam("name") String name) {
+        List<WatchResponseDTO> watches = watchService.findByName(name);
+        return Response.ok(watches).build();
+    }
 
 }

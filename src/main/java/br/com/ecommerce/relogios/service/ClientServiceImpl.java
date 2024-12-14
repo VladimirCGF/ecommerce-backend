@@ -109,6 +109,9 @@ public class ClientServiceImpl implements ClientService {
         userRepository.persist(user);
 
         Client client = new Client();
+        client.setFirstName(clientDTO.firstName());
+        client.setLastName(clientDTO.lastName());
+        client.setCpf(clientDTO.cpf());
         client.setUser(user);
         clientRepository.persist(client);
         return ClientResponseDTO.valueOf(client);
@@ -199,12 +202,7 @@ public class ClientServiceImpl implements ClientService {
         if (address == null) {
             throw new NotFoundException("id address not found");
         }
-        client.getAddresses().remove(address);
-        address.setClient(null);
-        addressRepository.persist(address);
-        clientRepository.persist(client);
-        clientRepository.flush();
-        clientRepository.getEntityManager().clear();
+        addressRepository.delete(address);
     }
 
     @Transactional
@@ -271,28 +269,34 @@ public class ClientServiceImpl implements ClientService {
         Client client = clientRepository.findByEmail(user.getEmail());
 
         Orders orders = ordersRepository.findPendingOrderByClientId(client.getId());
-        Coupon coupon = couponRepository.findByCode(ordersDTO.coupon());
-        if (coupon == null) {
-            throw new NotFoundException("coupon not found");
+
+        Coupon coupon = null;
+        if (ordersDTO.coupon() != null) {
+            coupon = couponRepository.findByCode(ordersDTO.coupon());
         }
+        orders.setCoupon(coupon);
 
         Address address = addressRepository.findById(ordersDTO.idAddress());
         if (address == null) {
             throw new NotFoundException("address not found");
         }
-        orders.setCoupon(coupon);
+
         double totalOrderPrice = orders.getOrderItems().stream()
                 .mapToDouble(OrderItem::getPrice)
                 .sum();
-        double discount = coupon.getDiscountPercentage() / 100.0;
+
+        double discount = (coupon != null) ? coupon.getDiscountPercentage() / 100.0 : 0.0;
         double totalWithDiscount = totalOrderPrice - (totalOrderPrice * discount);
+
         orders.setTotalPrice(totalWithDiscount);
         orders.setAddress(address);
         orders.setStatus(OrdersStatus.WAITING_FOR_PAYMENT);
         orders.setPaymentDeadline(LocalDateTime.now().plusMinutes(1));
         ordersRepository.persist(orders);
+
         return OrdersResponseDTO.valueOf(orders);
     }
+
 
     @Transactional
     @Override
@@ -333,6 +337,15 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     @Override
+    public List<OrderItemResponseDTO> findMyOrderItems(Long idOrder) {
+        User user = userRepository.findByEmail(getLoggedClient().getUser().getEmail());
+        Client client = clientRepository.findByEmail(user.getEmail());
+        List<OrderItem> orderItemList = orderItemRepository.findByIdOrder(idOrder);
+        return orderItemList.stream().map(OrderItemResponseDTO::valueOf).toList();
+    }
+
+    @Transactional
+    @Override
     public List<OrdersResponseDTO> findMyListOrders() {
         User user = userRepository.findByEmail(getLoggedClient().getUser().getEmail());
         Client client = clientRepository.findByEmail(user.getEmail());
@@ -351,6 +364,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
 
+    @Override
+    public ClientResponseDTO findByEmail(String email) {
+        Client client = clientRepository.findByEmail(email);
+        return ClientResponseDTO.valueOf(client);
+    }
+
 
     private void validUserDTO(ClientDTO clientDTO) {
         if (userRepository.find("email", clientDTO.email()).count() > 0) {
@@ -365,8 +384,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
 //    @Transactional
-//    @Override
 //    @Scheduled(cron = "*/10 * * * * ?")
+//    @Override
 //    public void cancelExpiredOrders() {
 //        List<Orders> expiredOrders = ordersRepository.findExpiredOrders(LocalDateTime.now());
 //        for (Orders order : expiredOrders) {

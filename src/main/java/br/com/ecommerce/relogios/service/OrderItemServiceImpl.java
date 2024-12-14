@@ -106,4 +106,49 @@ public class OrderItemServiceImpl implements OrderItemService {
         }
         orderItemRepository.deleteById(id);
     }
+
+    @Transactional
+    @Override
+    public void addQuantity(Long idOrderItem, Integer quantity) {
+        OrderItem orderItem = orderItemRepository.findById(idOrderItem);
+
+        if (orderItem == null) {
+            throw new NotFoundException("id order item not found");
+        }
+
+        orderItem.setQuantity(orderItem.getQuantity() + quantity);
+        orderItem.setPrice(orderItem.getWatch().getPrice() * orderItem.getQuantity());
+
+        Orders order = orderItem.getOrders();
+        double totalPrice = order.getItems()
+                .stream()
+                .mapToDouble(OrderItem::getPrice)
+                .sum();
+
+        order.setTotalPrice(totalPrice);
+        orderItemRepository.persist(orderItem);
+        ordersRepository.persist(order);
+    }
+
+
+    @Transactional
+    @Override
+    public void removeQuantity(Long idOrderItem, Integer quantity) {
+        OrderItem orderItem = orderItemRepository.findById(idOrderItem);
+        if (orderItem == null) {
+            throw new NotFoundException("id order item not found");
+        }
+        orderItem.setQuantity(orderItem.getQuantity() - quantity);
+        orderItem.setPrice(orderItem.getWatch().getPrice() * orderItem.getQuantity());
+
+        Orders order = orderItem.getOrders();
+        double totalPrice = order.getItems()
+                .stream()
+                .mapToDouble(OrderItem::getPrice)
+                .sum();
+
+        order.setTotalPrice(totalPrice);
+        orderItemRepository.persist(orderItem);
+        ordersRepository.persist(order);
+    }
 }

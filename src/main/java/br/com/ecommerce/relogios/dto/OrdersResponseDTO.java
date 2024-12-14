@@ -13,9 +13,9 @@ public record OrdersResponseDTO(
         Long idAddress,
         String status,
         String coupon,
-        List<OrderItemResponseDTO> lista) {
+        List<OrderItemResponseDTO> orderItems) {
     public static OrdersResponseDTO valueOf(Orders orders) {
-        List<OrderItemResponseDTO> items = orders.getItems().stream().map(OrderItemResponseDTO::valueOf).toList();
+        List<OrderItemResponseDTO> orderItems = orders.getItems().stream().map(OrderItemResponseDTO::valueOf).toList();
         return new OrdersResponseDTO(
                 orders.getId(),
                 orders.getOrderDate(),
@@ -24,6 +24,6 @@ public record OrdersResponseDTO(
                 orders.getAddress() != null ? orders.getAddress().getId() : null,
                 orders.getStatus().getName(),
                 orders.getCoupon() != null ? orders.getCoupon().getCode() : null,
-                items);
+                orderItems);
     }
 }

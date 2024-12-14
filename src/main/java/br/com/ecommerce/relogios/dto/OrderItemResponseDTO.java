@@ -5,16 +5,17 @@ import br.com.ecommerce.relogios.model.OrderItem;
 public record OrderItemResponseDTO(
         Long id,
         Long idOrders,
-        Long idWatch,
         Integer quantity,
-        Double price) {
+        Double price,
+        WatchResponseDTO idWatch) {
 
     public static OrderItemResponseDTO valueOf(OrderItem orderItem) {
+        WatchResponseDTO watch = WatchResponseDTO.valueOf(orderItem.getWatch());
         return new OrderItemResponseDTO(
                 orderItem.getId(),
                 orderItem.getOrders().getId(),
-                orderItem.getWatch().getId(),
                 orderItem.getQuantity(),
-                orderItem.getPrice());
+                orderItem.getPrice(),
+                watch);
     }
 }

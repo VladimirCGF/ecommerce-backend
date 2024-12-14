@@ -110,4 +110,11 @@ public class AddressServiceImpl implements AddressService {
         }
         addressRepository.deleteById(id);
     }
+
+    @Transactional
+    @Override
+    public List<AddressResponseDTO> findAddressByIdClient(Long id) {
+        List<Address> list = addressRepository.findByIdClient(id);
+        return list.stream().map(AddressResponseDTO::valueOf).toList();
+    }
 }

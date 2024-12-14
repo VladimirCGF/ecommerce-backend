@@ -105,4 +105,20 @@ public class OrderItemResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao deletar OrderItem").build();
         }
     }
+
+    @PATCH
+    @Path("/addQuantity/{idOrderItem}")
+    public Response addQuantity(@PathParam("idOrderItem") Long idOrderItem, Integer quantity) {
+        orderItemService.addQuantity(idOrderItem, quantity);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @PATCH
+    @Path("/removeQuantity/{idOrderItem}")
+    public Response removeQuantity(@PathParam("idOrderItem") Long idOrderItem, Integer quantity) {
+        orderItemService.removeQuantity(idOrderItem, quantity);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+
 }

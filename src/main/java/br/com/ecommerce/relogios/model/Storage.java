@@ -12,7 +12,7 @@ public class Storage extends DefaultEntity {
     private String url;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "watch_id")
     private Watch watch;
 

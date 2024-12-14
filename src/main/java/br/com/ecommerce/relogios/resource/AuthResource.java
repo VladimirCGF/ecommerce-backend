@@ -1,11 +1,12 @@
 package br.com.ecommerce.relogios.resource;
 
 import br.com.ecommerce.relogios.dto.AuthUserDTO;
+import br.com.ecommerce.relogios.dto.LoginResponse;
 import br.com.ecommerce.relogios.dto.UserResponseDTO;
-import br.com.ecommerce.relogios.service.ClientService;
 import br.com.ecommerce.relogios.service.HashService;
 import br.com.ecommerce.relogios.service.JwtService;
 import br.com.ecommerce.relogios.service.UserService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -29,13 +30,16 @@ public class AuthResource {
     JwtService jwtService;
 
     @POST
+    @PermitAll
     public Response login(AuthUserDTO authUserDTO) {
 
         String hash = hashService.getHashPassword(authUserDTO.password());
 
         UserResponseDTO user = userService.login(authUserDTO.email(), hash);
 
-        return Response.ok(user).header("Authorization", jwtService.generateJwt(user)).build();
+        LoginResponse token = new LoginResponse(jwtService.generateJwt(user));
+
+        return Response.ok(token).build();
     }
 
 }

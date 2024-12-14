@@ -2,6 +2,7 @@ package br.com.ecommerce.relogios.service;
 
 import br.com.ecommerce.relogios.dto.*;
 import br.com.ecommerce.relogios.model.Client;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -37,11 +38,16 @@ public interface ClientService {
 
     public List<AddressResponseDTO> findMyListAddress();
 
+    List<OrderItemResponseDTO> findMyOrderItems(Long idOrder);
+
     public List<OrdersResponseDTO> findMyListOrders();
 
     public UserResponseDTO login(String email, String password);
 
     boolean checkEmailUnique(Long id, String email);
+
+    ClientResponseDTO findByEmail(String email);
+
 
 //    public void cancelExpiredOrders();
 

@@ -1,5 +1,6 @@
 package br.com.ecommerce.relogios.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -125,4 +126,5 @@ public class Watch extends DefaultEntity {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
+
 }

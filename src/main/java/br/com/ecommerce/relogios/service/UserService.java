@@ -21,4 +21,6 @@ public interface UserService {
     public User getLoggedUser();
 
     public UserResponseDTO login(String email, String password);
+
+
 }

@@ -1,9 +1,6 @@
 package br.com.ecommerce.relogios.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "address")
@@ -21,7 +18,7 @@ public class Address extends DefaultEntity {
 
     private String cep;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id")
     private Client client;
 

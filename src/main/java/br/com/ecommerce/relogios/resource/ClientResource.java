@@ -107,6 +107,12 @@ public class ClientResource {
     }
 
     @GET
+    @Path("findByEmail/{email}")
+    public Response clientFindByEmail(@PathParam("email") String email){
+        return Response.ok(clientService.findByEmail(email)).build();
+    }
+
+    @GET
     @Path("/valid")
     public Boolean valid(@QueryParam("id") Long id, @QueryParam("email") String email) {
         LOG.info("Executando o checkEmailUnique");
@@ -146,7 +152,7 @@ public class ClientResource {
     }
 
     @RolesAllowed("Cliente")
-    @PATCH
+    @DELETE
     @Path("/removerAddress/{id}")
     public Response removerAddress(@Valid @PathParam("id") Long id) {
         try {
@@ -183,8 +189,8 @@ public class ClientResource {
 
     @RolesAllowed("Cliente")
     @PUT
-    @Path("/removeItem")
-    public Response removeItem(Long idOrderItem) {
+    @Path("/removeItem/{idOrderItem}")
+    public Response removeItem(@PathParam("idOrderItem") Long idOrderItem) {
         try {
             LOG.info("Executando o addItem");
             clientService.removerItem(idOrderItem);
@@ -274,6 +280,23 @@ public class ClientResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Orders não encontrado").build();
         }
     }
+
+    @RolesAllowed("Cliente")
+    @GET
+    @Path("/myOrderItems/{id}")
+    public Response findMyOrderItems(@PathParam("id") Long idOrder) {
+        try {
+            LOG.info("Executando o findMyOrderItems");
+            List<OrderItemResponseDTO> orderItemList = clientService.findMyOrderItems(idOrder);
+            LOG.info("Sucesso");
+            return Response.ok(orderItemList).build();
+        } catch (NotFoundException e) {
+            LOG.warn("Orders não encontrado");
+            return Response.status(Response.Status.NOT_FOUND).entity("Orders não encontrado").build();
+        }
+    }
+
+
 
     @RolesAllowed("Cliente")
     @GET

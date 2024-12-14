@@ -1,9 +1,6 @@
 package br.com.ecommerce.relogios.service;
 
-import br.com.ecommerce.relogios.dto.StorageDTO;
-import br.com.ecommerce.relogios.dto.StorageResponseDTO;
-import br.com.ecommerce.relogios.dto.WatchDTO;
-import br.com.ecommerce.relogios.dto.WatchResponseDTO;
+import br.com.ecommerce.relogios.dto.*;
 import br.com.ecommerce.relogios.model.Storage;
 import br.com.ecommerce.relogios.model.Watch;
 import br.com.ecommerce.relogios.repository.StorageRepository;
@@ -13,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -38,11 +36,11 @@ public class WatchServiceImpl implements WatchService {
 
     @Transactional
     @Override
-    public List<WatchResponseDTO> findAll() {
+    public List<WatchListResponseDTO> findAll() {
         return watchRepository
                 .listAll()
                 .stream()
-                .map(WatchResponseDTO::valueOf).toList();
+                .map(WatchListResponseDTO::valueOf).toList();
     }
 
     @Override
@@ -117,6 +115,40 @@ public class WatchServiceImpl implements WatchService {
         storage.setId(storageResponseDTO.id());
         watch.setImagePerfil(storage);
         watchRepository.persist(watch);
+    }
+
+    @Transactional
+    @Override
+    public List<WatchResponseDTO> getWatchesByOrderId(Long orderId) {
+        return watchRepository
+                .findWatchesByOrderId(orderId)
+                .stream()
+                .map(WatchResponseDTO::valueOf).toList();
+
+    }
+
+    @Transactional
+    @Override
+    public List<WatchResponseDTO> findByName(String name) {
+        return watchRepository
+                .findByName(name)
+                .stream()
+                .map(WatchResponseDTO::valueOf).toList();
+    }
+
+    private String getUniqueFileName(String baseName) {
+        String nameWithoutExtension = baseName.substring(0, baseName.lastIndexOf('.'));
+        String extension = baseName.substring(baseName.lastIndexOf('.'));
+
+        String newName = baseName;
+        int counter = 1;
+
+        while (storageRepository.existsByName(newName)) {
+            System.out.println("Checking existence of: " + newName);
+            newName = nameWithoutExtension + "(" + counter + ")" + extension;
+            counter++;
+        }
+        return newName;
     }
 
 }

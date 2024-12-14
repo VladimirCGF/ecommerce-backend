@@ -15,5 +15,9 @@ public interface OrderItemService {
 
     public void update(Long id, OrderItemDTO orderItemDTO);
 
+    void addQuantity(Long idOrderItem, Integer quantity);
+
+    void removeQuantity(Long idOrderItem, Integer quantity);
+
     public void delete(Long id);
 }

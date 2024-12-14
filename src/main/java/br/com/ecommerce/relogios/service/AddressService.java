@@ -16,4 +16,7 @@ public interface AddressService {
     public void update(Long id, AddressDTO addressDTO);
 
     public void delete(Long id);
+
+
+    List<AddressResponseDTO> findAddressByIdClient(Long id);
 }

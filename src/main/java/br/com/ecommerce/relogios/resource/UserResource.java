@@ -55,6 +55,8 @@ public class UserResource {
         }
     }
 
+
+
 //    @RolesAllowed({"Admin", "Funcionario"})
     @POST
     public Response create(UserDTO userDTO) {
